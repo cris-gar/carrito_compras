@@ -97,4 +97,36 @@ class Carritos_compras extends CI_Controller {
     public function show_cart(){
         $this->load->view('carrito_compras/cart');
     }
+
+    public function update_cart(){
+        // Retrieve the posted information
+        $item = $this->input->post('rowid');
+        $qty = $this->input->post('qty');
+        $this->Productos_model->validate_update_cart($item,$qty);
+        redirect('carritos_compras');
+    }
+
+    public function empty_cart(){
+        $this->cart->destroy(); // Destroy all cart data
+        redirect('carritos_compras'); // Refresh te page
+    }
+
+    public function comprar(){
+
+        $Message = "Estimado uds compro: \n";
+        foreach($this->cart->contents() as $row){
+            $Message.= $row['name']." cuyo codigo es ".$row['options']['codigo']."\n";
+        }
+
+        $this->email->from('cristian.garrido@ceinf.cl', 'Cristian');
+        $this->email->to('cristiangarridoamestica@gmail.com');
+
+        $this->email->subject('Correo de Prueba');
+
+        $this->email->message($Message);
+
+        $this->email->send();
+
+        echo $this->email->print_debugger();
+    }
 }

@@ -42,7 +42,12 @@ class Productos_model extends CI_Model {
                     'id' => $id,
                     'qty' => $cty,
                     'price' => 500,
-                    'name' => $row->nombre
+                    'name' => $row->nombre,
+                    'options' => array(
+                        'descripcion' => $row->descripcion,
+                        'codigo' => $row->codigo,
+                        'foto' => $row->foto
+                    )
                 );
 
                 // Add the data to the cart using the insert function that is available because we loaded the cart library
@@ -52,6 +57,23 @@ class Productos_model extends CI_Model {
             }else{
             // Nothing found! Return FALSE!
             return FALSE;
+        }
+    }
+
+    function validate_update_cart($item = array(),$qty = array()){
+       // Obtencion total de productos en el carro
+        $total = $this->cart->total_items();
+
+        // Ciclo con todos los artículos existentes y actualizarlos
+        for($i=0;$i < $total;$i++)
+        {
+            // Crear un array con los productos de ROWID y cantidades.
+            $data = array(
+                'rowid' => $item[$i],
+                'qty'   => $qty[$i]
+            );
+            // Actualizacion de la compra con la nueva información
+            $this->cart->update($data);
         }
     }
 

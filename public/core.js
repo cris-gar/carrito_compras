@@ -27,4 +27,14 @@ $(document).ready(function() {
         return false; // Stop the browser of loading the page defined in the form "action" parameter.
     });
 
+    $(".empty").live("click", function(){
+        $.get(link + "cart/empty_cart", function(){
+            $.get(link + "cart/show_cart", function(cart){
+                $("#cart_content").html(cart);
+            });
+        });
+
+        return false;
+    });
+
 });
